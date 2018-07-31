@@ -2,6 +2,50 @@
 
 > i18n for your Angular app, made easy!
 
+## Pentaho version
+
+This fork of angular-translate was created to legalize a patched version of angular-translate that was developed to support
+Data Profiling (which ended up never being shipped) 
+(see https://github.com/pentaho/pentaho-data-profiling-ee/blob/master/rest/hdfs/text/master/src/main/resources/webview/js/create/app.js#L54).
+
+The patch was needed so that angular-translate would support `.properties` resource files.
+
+At the time, a JAR was manually uploaded into Pentaho's NEXUS:
+```xml
+<dependency>
+  <groupId>angular-translate</groupId>
+  <artifactId>angular-translate</artifactId>
+  <version>2.2.0-canary-pentaho-modified</version>
+</dependency>
+```
+
+Strangely, the content of that JAR does not match exactly the `canary` branch of this repository, 
+although it does seem to be based on it...
+
+At the time, a PR was issued to angular-translate, with a similar implementation of this feature (to the one in NEXUS):
+https://github.com/angular-translate/angular-translate/pull/706.
+However, they ended up implementing it in a different way, and the PR was closed.
+
+The Common-UI project is currently unpacking this jar and including it in its web resources directory.
+You can find angular translate in a Pentaho Server at the location:
+
+`pentaho-server/pentaho-solutions/system/common-ui/resources/web/angular-translate`
+
+Common-UI directly includes (checked in source control) a 
+`.properties` files parser that is then hooked to angular-translate:
+https://github.com/pentaho/pentaho-platform-plugin-common-ui/blob/master/impl/client/src/main/javascript/web/angular-translate/properties-parser.js.
+
+The marketplace project is using angular-translate version 2.2.0, 
+but then it bundles its own version of the patched static loader and properties parser:
+https://github.com/pentaho/marketplace/blob/c1a4f706c984ba6e44517945daa635be2559efca/marketplace-core/src/main/resources/web/js/app.js#L21,
+which seems to have been derived from common-ui's patched version...
+
+Some investigation is needed to determine if there are still any projects using the Common-UI version
+and, consequently, if this repository is of any use.
+Ideally, any existing code using angular-translate would be upgraded to use its current latest version.
+
+## Original Read Me
+
 ### Status
 | Branch        | Status         |
 | ------------- |:-------------:|
